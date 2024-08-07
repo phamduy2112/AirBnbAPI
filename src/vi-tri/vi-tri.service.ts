@@ -27,7 +27,7 @@ export class ViTriService {
     const findLocationAll= await this.prisma.viTri.findMany();
     return responseSend(findLocationAll, "Thành công !", 200);
   }catch(e){
-    return responseSend(null, "Thất bại !", 500);
+    return responseSend(e, "Thất bại !", 500);
 
   }
 
@@ -59,7 +59,7 @@ async findAllPageSearch(query: FilterViTriDto) {
     return responseSend(findPage, "Thành công !", 200);
   
   }catch(e){
-    return responseSend(null, "Thất bại !", 500);
+    return responseSend(e, "Thất bại !", 500);
 
   }
   
@@ -78,7 +78,7 @@ async findAllPageSearch(query: FilterViTriDto) {
     return responseSend(findLocationOne, "Thành công !", 200);
 
   }catch(e){
-    return responseSend(null, "Thất bại !", 500);
+    return responseSend(e, "Thất bại !", 500);
 
   }
 
@@ -105,7 +105,7 @@ async findAllPageSearch(query: FilterViTriDto) {
 
 
     }catch(e){
-      return responseSend(null, "Thất bại !", 500);
+      return responseSend(e, "Thất bại !", 500);
 
     }
     
@@ -130,7 +130,7 @@ async findAllPageSearch(query: FilterViTriDto) {
       return responseSend(deleteLocation, "Thành công !", 200);
   
     }catch(e){
-      return responseSend(null, "Thất bại !", 500);
+      return responseSend(e, "Thất bại !", 500);
 
     }
     
