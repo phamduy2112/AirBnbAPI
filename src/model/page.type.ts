@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class FilterViTriDto{
+export class PageFilter{
     @ApiProperty()
     pageIndex:number;
     @ApiProperty()
     pageSize:number;
-    @ApiProperty()
-    search?: string
+    // @ApiProperty()
+    // search?: string
 }

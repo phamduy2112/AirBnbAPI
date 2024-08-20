@@ -8,9 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors() // mo cors
   app.use(express.static("."))
-  const config=new DocumentBuilder().setTitle('API Documentation')
+  const config=new DocumentBuilder().setTitle('API AirBnB')
   .setDescription('The API description')
   .setVersion('1.0')
+  .addBearerAuth()
   .build();
   const document=SwaggerModule.createDocument(app,config);
   SwaggerModule.setup("/swagger",app,document)

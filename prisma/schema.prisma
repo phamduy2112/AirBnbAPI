@@ -34,40 +34,42 @@ model DatPhong {
 }
 
 model NguoiDung {
-  id        Int        @id @default(autoincrement())
-  name      String?    @db.VarChar(255)
-  email     String?    @db.VarChar(255)
-  pass_word String?    @db.VarChar(255)
-  phone     String?    @db.VarChar(20)
-  birth_day String?    @db.VarChar(20)
-  gender    String?    @db.VarChar(10)
-  image     String?    @db.VarChar(100)
-  role      String?    @db.VarChar(50)
-  BinhLuan  BinhLuan[]
-  DatPhong  DatPhong[]
+  id            Int             @id @default(autoincrement())
+  name          String?         @db.VarChar(255)
+  email         String?         @db.VarChar(255)
+  pass_word     String?         @db.VarChar(255)
+  phone         String?         @db.VarChar(20)
+  birth_day     String?         @db.VarChar(20)
+  gender        String?         @db.VarChar(10)
+  image         String?         @db.VarChar(100)
+  role          String?         @db.VarChar(50)
+  BinhLuan      BinhLuan[]
+  DatPhong      DatPhong[]
+  PhongYeuThich PhongYeuThich[]
 }
 
 model Phong {
-  id        Int        @id @default(autoincrement())
-  ten_phong String?    @db.VarChar(255)
-  khach     Int?
-  phong_ngu Int?
-  phong_tam Int?
-  id_viTri  Int?
-  mo_ta     String?    @db.VarChar(255)
-  gia_tien  Int?
-  may_giat  Boolean?
-  ban_la    Boolean?
-  tivi      Boolean?
-  dieu_hoa  Boolean?
-  wifi      Boolean?
-  bep       Boolean?
-  do_xe     Boolean?
-  ho_boi    Boolean?
-  ban_ui    Boolean?
-  hinh_anh  String?    @db.VarChar(255)
-  DatPhong  DatPhong[]
-  ViTri     ViTri?     @relation(fields: [id_viTri], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Phong_ibfk_1")
+  id            Int             @id @default(autoincrement())
+  ten_phong     String?         @db.VarChar(255)
+  khach         Int?
+  phong_ngu     Int?
+  phong_tam     Int?
+  id_viTri      Int?
+  mo_ta         String?         @db.VarChar(255)
+  gia_tien      Int?
+  may_giat      Boolean?
+  ban_la        Boolean?
+  tivi          Boolean?
+  dieu_hoa      Boolean?
+  wifi          Boolean?
+  bep           Boolean?
+  do_xe         Boolean?
+  ho_boi        Boolean?
+  ban_ui        Boolean?
+  hinh_anh      String?         @db.VarChar(255)
+  DatPhong      DatPhong[]
+  ViTri         ViTri?          @relation(fields: [id_viTri], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Phong_ibfk_1")
+  PhongYeuThich PhongYeuThich[]
 
   @@index([id_viTri], map: "id_viTri")
 }
@@ -79,4 +81,15 @@ model ViTri {
   quoc_gia   String? @db.VarChar(255)
   hinh_anh   String? @db.VarChar(255)
   Phong      Phong[]
+}
+
+model PhongYeuThich {
+  id_yeu_thich       Int        @id @default(autoincrement())
+  ma_phong_yeu_thich Int?
+  ma_nguoi_yeu_thich Int?
+  Phong              Phong?     @relation(fields: [ma_phong_yeu_thich], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PhongYeuThich_ibfk_1")
+  NguoiDung          NguoiDung? @relation(fields: [ma_nguoi_yeu_thich], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PhongYeuThich_ibfk_2")
+
+  @@index([ma_nguoi_yeu_thich], map: "ma_nguoi_yeu_thich")
+  @@index([ma_phong_yeu_thich], map: "ma_phong_yeu_thich")
 }

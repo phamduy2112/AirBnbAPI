@@ -9,30 +9,34 @@ import { diskStorage } from 'multer';
 
 import { FileInterceptorClass } from 'src/model/file.image';
 import path from 'path';
-import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
-
-
-@ApiTags("vi-tri")
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiProperty, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
+class uploadTypeDto{
+  @ApiProperty({ type: 'string', format: 'binary' })
+  hinhAnh: any;
+}
+@ApiBearerAuth()
+@ApiTags("Vị Trí")
 @Controller('vi-tri')
 export class ViTriController {
   constructor(private readonly viTriService: ViTriService) {}
 
   
-
-  // @UseInterceptors(FileInterceptorClass.getFileInterceptor())
+  @UseGuards(AuthGuard)
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Post()
   @UsePipes(ValidationPipe)
   create(
     @Body() createViTriDto: CreateViTriDto,
-// @UploadedFile() file: Express.Multer.File
 ) {
     return this.viTriService.create(createViTriDto);
   }
 
+  
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Get()
-  // @UseGuards(AuthGuard, RolesGuard) // Áp dụng cả AuthGuard và RolesGuard
-  // @Role('user') // Chỉ cho phép người dùng với vai trò 'admin'
-
   async findAll() {
   
     return this.viTriService.findAll();
@@ -40,34 +44,70 @@ export class ViTriController {
 
   @ApiQuery({name:'pageIndex'})
   @ApiQuery({name:'pageSize'})
-  @ApiQuery({name:'search'})
+  @ApiQuery({
+    name: 'search',
+    required: false,  // Đặt required là false để không yêu cầu tham số này
+    type: String,     // Xác định loại của tham số này (số trong trường hợp này)
+  })
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:404,description:"Vị trí không tồn tại !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Get('/phan-trang-tim-kiem')
   findAllPage(@Query() query:FilterViTriDto){
     return this.viTriService.findAllPageSearch(query)
   }
 
 
-
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:404,description:"Vị trí không tồn tại !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.viTriService.findOne(+id);
   }
-  // @UseInterceptors(FileInterceptorClass.getFileInterceptor())
+
+  @UseGuards(AuthGuard)
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:404,description:"Vị trí không tồn tại !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Put(':id')
   update(@Param('id') id: string, 
-  @Body() updateViTriDto: UpdateViTriDto,
-  // @UploadedFile() file: Express.Multer.File
+  @Body() updateViTriDto: CreateViTriDto,
 
 ) {
     return this.viTriService.update(+id,updateViTriDto);
   }
 
  
-
+  @UseGuards(AuthGuard)
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:404,description:"Vị trí không tồn tại !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
   @Delete(':id')
   remove(@Param('id') id: string) {
  
 
     return this.viTriService.remove(+id);
   }
+  
+  @UseGuards(AuthGuard)
+  @ApiResponse({status:200,description:"Thành công !"})
+  @ApiResponse({status:404,description:"Vị trí không tồn tại !"})
+  @ApiResponse({status:500,description:"Thất bại !"})
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    type:uploadTypeDto 
+  })
+  @UseInterceptors(FileInterceptorClass.getFileInterceptor())
+  
+  @Put('upload/:id')
+  updateImage(@Param('id') id: string, 
+  @Body() updateViTriDto: UpdateViTriDto,
+  @UploadedFile() file: Express.Multer.File
+
+) {
+    return this.viTriService.update(+id, {...updateViTriDto,hinh_anh:file.filename});
+  }
+
+ 
 }

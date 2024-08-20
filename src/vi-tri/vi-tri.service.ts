@@ -72,7 +72,7 @@ async findAllPageSearch(query: FilterViTriDto) {
       }
     });
     if(!findLocationOne){
-      return responseSend(null, "Vị trí không tồn tại", 404);
+      return responseSend(null, "Vị trí không tồn tại !", 404);
 
     }
     return responseSend(findLocationOne, "Thành công !", 200);
@@ -119,7 +119,7 @@ async findAllPageSearch(query: FilterViTriDto) {
         }
       })
       if (!checkLocation) {
-        return responseSend(null, "Comment không tồn tại", 404);
+        return responseSend(null, "Vị trí không tồn tại", 404);
       }
   
       const deleteLocation= await this.prisma.viTri.delete({
@@ -135,4 +135,5 @@ async findAllPageSearch(query: FilterViTriDto) {
     }
     
   }
+  
 }
